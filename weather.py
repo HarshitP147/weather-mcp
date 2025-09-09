@@ -1,4 +1,9 @@
+import asyncio
+import signal
+import sys
+import time
 from typing import Any
+import logging
 import httpx
 from mcp.server.fastmcp import FastMCP
 
@@ -90,10 +95,33 @@ Forecast: {period['detailedForecast']}
 
     return "\n---\n".join(forecasts)
 
+logger = logging.getLogger(__name__)
+
 
 if __name__ == "__main__":
-    # Initialize and run the server
-    # logging.log(msg="Starting MCP server", level=0)
-    print("Starting and running MCP server")
-    mcp.run(transport='stdio')
-    print("Exiting MCP server")
+    
+    
+    logger.info("Starting MCP server on port 8000...")
+    
+    def signal_handler(sig, frame):
+        logger.info("Received shutdown signal")
+        sys.exit(0)
+    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    try:
+        # Keep the server running with an event loop
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+        # Run the server in a way that blocks
+        mcp.run(transport='stdio')
+        
+
+    except KeyboardInterrupt:
+        logger.info("Server interrupted by user")
+    except Exception as e:
+        logger.error(f"Server error: {e}")
+    
+    logger.info("Exiting MCP server")
