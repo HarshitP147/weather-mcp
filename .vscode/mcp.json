@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "weather": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "C:\\Users\\Harshit Pandit\\Desktop\\weather",
+                "run",
+                "weather.py"
+            ]
+        }
+    }
+}
