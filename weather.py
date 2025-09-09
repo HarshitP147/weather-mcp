@@ -93,4 +93,7 @@ Forecast: {period['detailedForecast']}
 
 if __name__ == "__main__":
     # Initialize and run the server
+    # logging.log(msg="Starting MCP server", level=0)
+    print("Starting and running MCP server")
     mcp.run(transport='stdio')
+    print("Exiting MCP server")
